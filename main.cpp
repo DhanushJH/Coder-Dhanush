@@ -2,6 +2,9 @@
 #include<fstream>
 #include<string>
 #include<curl/curl.h>
+#include<json.hpp>
+
+using json = nlohmann::json;
 
 using namespace std;
 
@@ -49,16 +52,41 @@ int main()
         {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(result) << std::endl;
         }
-        else
-        {
-            std::ofstream outputResponseFile("API_Response.json");
-            outputResponseFile << ResponseBuffer;
-            outputResponseFile.close();
-            std::cout << "Saved API Response to file successfully" << std::endl;
-        }
-
+        
         curl_easy_cleanup(curl);
         curl_slist_free_all(headers);
+
+        json jsonData; // Make an object of json
+
+        try
+        {
+            jsonData = json::parse(ResponseBuffer); // Parse the JSON from readBuffer
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "JSON parsing failed" << "\n";
+            return 1;
+        }
+
+        std::string sJoke = jsonData.value("joke", "JOKE_NOT_FOUND"); // Read the json response. if key "joke" is present, inser the value of joke into sJoke, else "JOKE_NOT_FOUND"
+
+        std::ofstream openfile("JOKES.txt", std::ios::app); // opens a file called JOKES.txt
+        openfile << sJoke << "\n";                          // append the string sJoke into the file
+        openfile.close();                                   // Close file
+
+        std::ifstream insidefile("JOKES.txt");
+        std::string sLine = "";
+        int iCount;
+        while (std::getline(insidefile, sLine))
+            iCount++;
+
+        std::cout << "Joke saved to file" << std::endl;
+        std::cout << "Total number of jokes in file : " << iCount << std::endl;
+
+        // std::ofstream outputResponseFile("API_Response.json");                   // was present in Day 1
+        // outputResponseFile << ResponseBuffer;
+        // outputResponseFile.close();
+        // std::cout << "Saved API Response to file successfully" << std::endl;
     }
     else
     {
