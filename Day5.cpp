@@ -47,6 +47,7 @@ int main()
     {
         json db = loadtojson();
         res.set_content(db.dump(4), "Content Type: application/json");
+        res.set_header("Access-Control-Allow-Origin", "*");
     });
 
     //GetCount
@@ -66,6 +67,7 @@ int main()
         json out;
         out["count"] = db.size();
         res.set_content(out.dump(4), "Content Type: application/json");
+        res.set_header("Access-Control-Allow-Origin", "*");
     });
 
     //Get Random Joke
@@ -78,6 +80,7 @@ int main()
             err["error"] = "Database is empty";
             res.status = 404;
             res.set_content(err.dump(4), "Content type: application/json");
+            res.set_header("Access-Control-Allow-Origin", "*");
             return;
         }
 
@@ -85,6 +88,7 @@ int main()
         int index = std::rand() % static_cast<int>(db.size());
         out = db[index];
         res.set_content(out.dump(4), "Content Type: application/json");
+        res.set_header("Access-Control-Allow-Origin", "*");
     });
 
     std::cout << "Server starting on http:://localhost:8080\n";
@@ -93,6 +97,7 @@ int main()
     std::cout << " /random ->  Get a random joke\n";
 
     svr.listen("0.0.0.0", 8080);
+    // svr.set_default_headers({"Access-Control-Allow-Origin", "*"});
 
     return 0;
 }

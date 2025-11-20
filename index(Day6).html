@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang=="en">
+    <head>
+        <meta charset="UTF-8">
+        <title> Random Joke Viwer</title>
+        <style>
+                body {
+                        font-family: Arial, sans-serif;
+                        background: #fafafa;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 40px;
+                }
+                head {
+                        color: #333;
+                        margin-bottom: 20px;
+                }
+                #jokeBox {
+                        font-size: 22px;
+                        background: #fff;
+                        border: 2px solid #eee;
+                        border-radius: 10px;
+                        padding: 20px;
+                        width: 60%;
+                        min-height: 100px;
+                        text-align: center;
+                        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+                }
+                #refreshBtn {
+                        margin-top: 25px;
+                        padding: 12px 28px;
+                        font-size: 18px;
+                        border: none;
+                        background: #0078ff;
+                        color: #fff;
+                        border-radius: 8px;
+                        cursor: pointer;
+                }
+                #refreshBtn:hover {
+                        background: #005fcc;
+                }
+        </style>
+    </head>
+    <body>
+
+    <h1> Random Joke Machine</h1>
+
+    <div id="jokeBox">Loading ... </div>
+
+    <button id="refreshBtn"> Load New Joke </button>
+
+    <script>
+        async function loadJoke() 
+        {
+            try
+            {
+                const response = await fetch("http://localhost:8080/random");
+                const data = await response.json();
+                document.getElementById("jokeBox").textContent = data.joke;
+            }
+            catch
+            {
+                document.getElementById("jokeBox").textContent = "Could not fetch Joke";
+            }
+        }
+ 
+        document.getElementById("refreshBtn").addEventListener("click", loadJoke);
+
+        loadJoke();
+   </script>
+   </body>
+</html>
