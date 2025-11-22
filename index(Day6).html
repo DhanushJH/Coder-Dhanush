@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=="en">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title> Random Joke Viwer</title>
@@ -55,7 +55,7 @@
         {
             try
             {
-                const response = await fetch("http://localhost:8080/random");
+                const response = await fetch("https://render-deployment-aydy.onrender.com/random");
                 const data = await response.json();
                 document.getElementById("jokeBox").textContent = data.joke;
             }
